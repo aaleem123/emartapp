@@ -1,9 +1,10 @@
-FROM node:14 AS nodeapi-Build 
+FROM node:14 AS Buildapi
 WORKDIR /usr/src/app
-COPY ./ ./nodeapi/
-RUN cd nodeapi && npm install 
+COPY ./ ./nodeapi 
+RUN cd nodeapi && npm install && npm run build --prod 
 
-FROM node:14 
-COPY --from=nodeapi-Build /usr/src/app/nodeapi/ ./
+FROM node:14
+COPY --from=Buildapi /usr/src/app/nodeapi ./
+
 EXPOSE 5000
-CMD ["/bin/sh", "-c", "cd /usr/src/app/ && npm install"]
+CMD ["/bin/sh", "-c", "cd /usr/src/app/ && npm start"]
